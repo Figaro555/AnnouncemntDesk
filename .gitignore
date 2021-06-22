@@ -1,0 +1,9 @@
+.idea
+src/main/java/com/announcementdesk/config
+src/main/java/com/announcementdesk/controlers/UserController.java
+src/main/java/com/announcementdesk/domain/User.java
+src/main/java/com/announcementdesk/domain/Role.java
+src/main/java/com/announcementdesk/repositories/UserRepository.java
+src/main/resources/application.properties
+src/main/resources/templates/main.mustache
+target
