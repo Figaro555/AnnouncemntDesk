@@ -35,7 +35,13 @@ public class AnnouncementController {
         return "main";
     }
 
-    @PostMapping("/announcement")
+    @GetMapping("/announcement/add")
+    public String adding(Map<String, Object> model){
+        return "addAnnouncement";
+    }
+
+
+    @PostMapping("/announcement/add")
     public String add(@RequestParam String topic, @RequestParam String text, @RequestParam String tag,Map<String, Object> model ){
         Announcement announcement = new Announcement(topic, text, tag);
         announcementRepository.save(announcement);
