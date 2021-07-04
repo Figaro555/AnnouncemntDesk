@@ -24,6 +24,8 @@ public class AuthController {
         this.userRepository = userRepository;
     }
 
+
+
     @GetMapping("/registration")
     public String register(){
         return "register";

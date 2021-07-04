@@ -1,17 +1,21 @@
 package com.announcementdesk.controlers;
 
 import com.announcementdesk.domain.Announcement;
+import com.announcementdesk.domain.User;
 import com.announcementdesk.repositories.AnnouncementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/announcement")
 public class AnnouncementController {
 
     private AnnouncementRepository announcementRepository;
@@ -21,13 +25,10 @@ public class AnnouncementController {
         this.announcementRepository = announcementRepository;
     }
 
-    /*@GetMapping("/greeting")
-    public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Map<String,Object> model) {
-        model.put("name", name);
-        return "start";
-    }*/
 
-    @GetMapping("/announcement")
+
+
+    @GetMapping
     public String main(Map<String, Object> model){
 
         Iterable<Announcement> announcements = announcementRepository.findAll();
@@ -35,24 +36,26 @@ public class AnnouncementController {
         return "main";
     }
 
-    @GetMapping("/announcement/add")
-    public String adding(Map<String, Object> model){
+    @GetMapping("/add")
+    public String addAnnouncement(Map<String, Object> model){
         return "addAnnouncement";
     }
 
 
-    @PostMapping("/announcement/add")
-    public String add(@RequestParam String topic, @RequestParam String text, @RequestParam String tag,Map<String, Object> model ){
-        Announcement announcement = new Announcement(topic, text, tag);
+    @PostMapping("/add")
+    public String addAnnouncement(
+            @AuthenticationPrincipal User user,
+            @RequestParam String topic,
+            @RequestParam String text,
+            @RequestParam String tag,
+            Map<String, Object> model ){
+        Announcement announcement = new Announcement(topic, text, tag, user);
         announcementRepository.save(announcement);
 
-        Iterable<Announcement> announcements = announcementRepository.findAll();
-        model.put("announcements", announcements);
-
-        return "main";
+        return "redirect:";
     }
 
-    @PostMapping("announcement/filter")
+    @PostMapping("/filter")
     public String filter(@RequestParam String filterTag, Map<String, Object> model){
         List<Announcement> announcements = announcementRepository.findByTag(filterTag);
 
