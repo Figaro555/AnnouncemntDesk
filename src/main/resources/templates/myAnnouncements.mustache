@@ -11,24 +11,18 @@
         <input type="submit" value="Sign Out"/>
     </form>
 </div>
-<a href = "/announcement/myannouncements">Look my announcements</a>
+<a href = "/announcement">Back</a>
 <br>
 <a href = "/announcement/add">Add new announcement</a>
 
 <div>Список сообщений</div>
-<form method="post" action="filter">
-    <input type="text" name="filterTag">
-    <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
-    <button type="submit">Найти</button>
-</form>
+
 {{#announcements}}
 <div>
     <b>{{id}}</b>
     <span>{{topic}}</span>
     <span>{{text}}</span>
     <i>{{tag}}</i>
-    <strong>{{authorName}}</strong>
 </div>
 {{/announcements}}
 </body>
-</html>

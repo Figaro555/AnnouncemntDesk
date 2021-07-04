@@ -63,4 +63,11 @@ public class AnnouncementController {
 
         return "main";
     }
+
+    @GetMapping("/myannouncements")
+    public String getMyAnnouncements(@AuthenticationPrincipal User user, Map<String, Object> model){
+        List<Announcement> userAnnouncements = announcementRepository.findByAuthor(user);
+        model.put("announcements", userAnnouncements);
+        return "myAnnouncements";
+    }
 }
