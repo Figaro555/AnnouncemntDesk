@@ -7,15 +7,18 @@
 </head>
 <body>
 
-<form th:method="POST" th:action="@{/announcement/add}" th:object="${announcement}">
+<form th:method="POST" enctype="multipart/form-data" th:action="@{/announcement/add}" th:object="${announcement}">
   <label for="topic">Enter topic: </label>
   <input type="text" th:field="*{topic}" id="topic"/>
   <br/>
   <label for="text">Enter text: </label>
   <input type="text" th:field="*{text}" id="text"/>
-   <br/>
+  <br/>
   <label for="tag">Enter tag: </label>
   <input type="text" th:field="*{tag}" id="tag"/>
+  <br/>
+  <label>Enter image: </label>
+  <input type="file" name="file"/>
   <br/>
   <input type="submit" value="Create!"/>
 </form>

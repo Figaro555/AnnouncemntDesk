@@ -18,6 +18,11 @@
     <span th:text="${announcement.getTopic()}"/>
     <span th:text="${announcement.getText()}"/>
     <i th:text="${announcement.getTag()}"/>
+
+    <div th:if="${announcement.getFilename() != null}">
+        <img src="@{/img/${announcement.getFilename()}">
+    </div>
+    <hr>
 </div>
 </body>
 </html>
