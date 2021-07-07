@@ -6,10 +6,8 @@ import com.announcementdesk.repositories.AnnouncementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -29,15 +27,16 @@ public class AnnouncementController {
 
 
     @GetMapping
-    public String main(Map<String, Object> model){
+    public String main(Model model){
 
         Iterable<Announcement> announcements = announcementRepository.findAll();
-        model.put("announcements", announcements);
+        model.addAttribute("announcements", announcements);
         return "main";
     }
 
     @GetMapping("/add")
-    public String addAnnouncement(Map<String, Object> model){
+    public String addAnnouncement(Model model){
+        model.addAttribute("announcement", new Announcement());
         return "addAnnouncement";
     }
 
@@ -45,13 +44,9 @@ public class AnnouncementController {
     @PostMapping("/add")
     public String addAnnouncement(
             @AuthenticationPrincipal User user,
-            @RequestParam String topic,
-            @RequestParam String text,
-            @RequestParam String tag,
-            Map<String, Object> model ){
-        Announcement announcement = new Announcement(topic, text, tag, user);
+            @ModelAttribute("announcement") Announcement announcement){
+        announcement.setAuthor(user);
         announcementRepository.save(announcement);
-
         return "redirect:";
     }
 
@@ -65,9 +60,9 @@ public class AnnouncementController {
     }
 
     @GetMapping("/myannouncements")
-    public String getMyAnnouncements(@AuthenticationPrincipal User user, Map<String, Object> model){
+    public String getMyAnnouncements(@AuthenticationPrincipal User user, Model model){
         List<Announcement> userAnnouncements = announcementRepository.findByAuthor(user);
-        model.put("announcements", userAnnouncements);
+        model.addAttribute("announcements", userAnnouncements);
         return "myAnnouncements";
     }
 }

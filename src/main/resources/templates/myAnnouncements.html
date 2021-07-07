@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My announcements</title>
+</head>
+<body>
+
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
+
+<a href = "/announcement">Back</a>
+<br>
+<a href = "/announcement/add">Add new announcement</a>
+
+<div th:each="announcement : ${announcements}">
+    <span th:text="${announcement.getTopic()}"/>
+    <span th:text="${announcement.getText()}"/>
+    <i th:text="${announcement.getTag()}"/>
+</div>
+</body>
+</html>
