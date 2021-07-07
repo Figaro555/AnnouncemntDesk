@@ -2,6 +2,9 @@ package com.announcementdesk.domain;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Announcement {
@@ -10,8 +13,12 @@ public class Announcement {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank(message = "topic can not be empty")
     private String topic;
+
+    @NotBlank(message = "description can not be empty")
     private String text;
+
     private String tag;
     private String filename;
 

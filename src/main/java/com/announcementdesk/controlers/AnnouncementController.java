@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -53,10 +55,16 @@ public class AnnouncementController {
     @PostMapping("/add")
     public String addAnnouncement(
             @AuthenticationPrincipal User user,
-            @ModelAttribute("announcement") Announcement announcement,
+            @ModelAttribute("announcement") @Valid Announcement announcement,
+            BindingResult bindingResult,
             @RequestParam("file") MultipartFile file) throws IOException {
 
-        if(file!= null){
+        if(bindingResult.hasErrors()){
+            return "addAnnouncement";
+        }
+
+
+        if(file!= null && file.getOriginalFilename().length()!=0){
             File uploadDir  = new File(uploadPath);
             if(!uploadDir.exists())
                 uploadDir.mkdir();

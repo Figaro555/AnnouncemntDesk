@@ -5,6 +5,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
 
@@ -16,9 +20,17 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank(message = "name can not be empty")
     private String name;
+
+    @NotBlank(message = "email can not be empty")
+    @Email(message = "email should be correct")
     private String email;
+
+    @NotBlank(message = "password can not be empty")
+    @Size(min = 6, message = "password should be larger than 6 symbols")
     private String password;
+
     private boolean active;
 
     public boolean isActive() {

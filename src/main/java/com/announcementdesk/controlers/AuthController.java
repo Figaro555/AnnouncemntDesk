@@ -6,11 +6,13 @@ import com.announcementdesk.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Map;
 
@@ -35,8 +37,12 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public String addUser(@ModelAttribute("user") User user, Model model){
-
+    public String addUser(@ModelAttribute("user") @Valid User user,
+                          BindingResult bindingResult,
+                          Model model){
+        if(bindingResult.hasErrors()){
+            return "register";
+        }
         User userFromDb = userRepository.findByName(user.getName());
 
         if (userFromDb != null) {
