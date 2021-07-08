@@ -30,6 +30,15 @@ public class AnnouncementService {
         return  announcements;
     }
 
+    public Iterable<Announcement> findByFilter(String filter){
+        Iterable<Announcement> announcements;
+        if(filter.equals("")){
+            announcements = findAll();
+        }else
+            announcements = announcementRepository.findByTopic(filter);
+        return  announcements;
+    }
+
      public void addAnnouncement(Announcement announcement, User author, MultipartFile file) throws IOException {
          if(file!= null && file.getOriginalFilename().length()!=0){
              File uploadDir  = new File(uploadPath);

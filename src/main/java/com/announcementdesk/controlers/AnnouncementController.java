@@ -2,7 +2,6 @@ package com.announcementdesk.controlers;
 
 import com.announcementdesk.domain.Announcement;
 import com.announcementdesk.domain.User;
-import com.announcementdesk.repositories.AnnouncementRepository;
 import com.announcementdesk.services.AnnouncementService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,11 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+
 
 @Controller
 @RequestMapping("/announcement")
@@ -35,12 +32,14 @@ public class AnnouncementController {
 
 
     @GetMapping
-    public String main(Model model){
+    public String main(@RequestParam(value = "filter", defaultValue = "") String filter,
+                       Model model){
 
-        Iterable<Announcement> announcements = announcementService.findAll();
+        Iterable<Announcement> announcements = announcementService.findByFilter(filter);
         model.addAttribute("announcements", announcements);
         return "main";
     }
+
 
     @GetMapping("/add")
     public String addAnnouncement(Model model){
@@ -66,14 +65,6 @@ public class AnnouncementController {
         return "redirect:";
     }
 
-//    @PostMapping("/filter")
-//    public String filter(@RequestParam String filterTag, Map<String, Object> model){
-//        List<Announcement> announcements = announcementRepository.findByTag(filterTag);
-//
-//        model.put("announcements", announcements);
-//
-//        return "main";
-//    }
 
     @GetMapping("/myannouncements")
     public String getMyAnnouncements(@AuthenticationPrincipal User user, Model model){

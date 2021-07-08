@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface AnnouncementRepository extends CrudRepository<Announcement, Long> {
     public List<Announcement> findByTag(String tag);
+    public List<Announcement> findByTopic(String topic);
     public List<Announcement> findByAuthor(User author);
 
 }
