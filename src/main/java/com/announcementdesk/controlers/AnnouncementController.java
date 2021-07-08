@@ -3,6 +3,7 @@ package com.announcementdesk.controlers;
 import com.announcementdesk.domain.Announcement;
 import com.announcementdesk.domain.User;
 import com.announcementdesk.repositories.AnnouncementRepository;
+import com.announcementdesk.services.AnnouncementService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -22,22 +23,21 @@ import java.util.UUID;
 @RequestMapping("/announcement")
 public class AnnouncementController {
 
-    private final AnnouncementRepository announcementRepository;
+    private final AnnouncementService announcementService;
+
+    public AnnouncementController(AnnouncementService announcementService) {
+        this.announcementService = announcementService;
+    }
+
 
     @Value("${upload.path}")
     private String uploadPath;
 
 
-    public AnnouncementController(AnnouncementRepository announcementRepository) {
-        this.announcementRepository = announcementRepository;
-    }
-
-
-
     @GetMapping
     public String main(Model model){
 
-        Iterable<Announcement> announcements = announcementRepository.findAll();
+        Iterable<Announcement> announcements = announcementService.findAll();
         model.addAttribute("announcements", announcements);
         return "main";
     }
@@ -60,34 +60,24 @@ public class AnnouncementController {
             return "addAnnouncement";
         }
 
+        announcementService.addAnnouncement(announcement, user, file);
 
-        if(file!= null && file.getOriginalFilename().length()!=0){
-            File uploadDir  = new File(uploadPath);
-            if(!uploadDir.exists())
-                uploadDir.mkdir();
 
-            String fileUUID = UUID.randomUUID().toString();
-            String resultFileName = fileUUID + "_" + file.getOriginalFilename();
-            file.transferTo(new File(uploadPath + "/" + resultFileName));
-            announcement.setFilename(resultFileName);
-        }
-        announcement.setAuthor(user);
-        announcementRepository.save(announcement);
         return "redirect:";
     }
 
-    @PostMapping("/filter")
-    public String filter(@RequestParam String filterTag, Map<String, Object> model){
-        List<Announcement> announcements = announcementRepository.findByTag(filterTag);
-
-        model.put("announcements", announcements);
-
-        return "main";
-    }
+//    @PostMapping("/filter")
+//    public String filter(@RequestParam String filterTag, Map<String, Object> model){
+//        List<Announcement> announcements = announcementRepository.findByTag(filterTag);
+//
+//        model.put("announcements", announcements);
+//
+//        return "main";
+//    }
 
     @GetMapping("/myannouncements")
     public String getMyAnnouncements(@AuthenticationPrincipal User user, Model model){
-        List<Announcement> userAnnouncements = announcementRepository.findByAuthor(user);
+        List<Announcement> userAnnouncements = announcementService.findByAuthor(user);
         model.addAttribute("announcements", userAnnouncements);
         return "myAnnouncements";
     }
@@ -97,7 +87,7 @@ public class AnnouncementController {
                                       @PathVariable("announcementId") Announcement announcement){
 
         if(user.equals(announcement.getAuthor())){
-            announcementRepository.delete(announcement);
+            announcementService.delete(announcement);
         }
         return "redirect:myannouncements";
     }
@@ -114,11 +104,11 @@ public class AnnouncementController {
                 return "addAnnouncement";
             }
 
-            announcement.setTopic(newAnnouncement.getTopic());
-            announcement.setText(newAnnouncement.getText());
-            announcement.setTag(newAnnouncement.getTag());
+            announcementService.setValues(announcement,
+                    newAnnouncement.getTopic(),
+                    newAnnouncement.getText(),
+                    newAnnouncement.getTag());
 
-            announcementRepository.save(announcement);
         }
 
         return "redirect:myannouncements";
