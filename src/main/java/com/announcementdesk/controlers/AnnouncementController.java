@@ -3,7 +3,6 @@ package com.announcementdesk.controlers;
 import com.announcementdesk.domain.Announcement;
 import com.announcementdesk.domain.User;
 import com.announcementdesk.repositories.AnnouncementRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,7 @@ import java.util.UUID;
 @RequestMapping("/announcement")
 public class AnnouncementController {
 
-    private AnnouncementRepository announcementRepository;
+    private final AnnouncementRepository announcementRepository;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -32,8 +31,6 @@ public class AnnouncementController {
     public AnnouncementController(AnnouncementRepository announcementRepository) {
         this.announcementRepository = announcementRepository;
     }
-
-
 
 
 
@@ -93,5 +90,15 @@ public class AnnouncementController {
         List<Announcement> userAnnouncements = announcementRepository.findByAuthor(user);
         model.addAttribute("announcements", userAnnouncements);
         return "myAnnouncements";
+    }
+
+    @DeleteMapping("/myannouncements/{announcement}")
+    public String deleteAnnouncement(@AuthenticationPrincipal User user,
+                                      @PathVariable("announcement") Announcement announcement){
+
+        if(user.equals(announcement.getAuthor())){
+            announcementRepository.delete(announcement);
+        }
+        return "redirect:";
     }
 }

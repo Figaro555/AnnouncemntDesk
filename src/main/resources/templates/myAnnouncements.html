@@ -22,6 +22,11 @@
     <div th:if="${announcement.getFilename() != null}">
         <img src="@{/img/${announcement.getFilename()}}">
     </div>
+    <form th:object="${announcement}"
+          th:action="@{/announcement/myannouncements/{id}(id=${announcement.getId()})}"
+          th:method="delete">
+        <input type="submit" value="Delete"/>
+    </form>
     <hr>
 </div>
 </body>
