@@ -92,13 +92,44 @@ public class AnnouncementController {
         return "myAnnouncements";
     }
 
-    @DeleteMapping("/myannouncements/{announcement}")
+    @DeleteMapping("/{announcementId}")
     public String deleteAnnouncement(@AuthenticationPrincipal User user,
-                                      @PathVariable("announcement") Announcement announcement){
+                                      @PathVariable("announcementId") Announcement announcement){
 
         if(user.equals(announcement.getAuthor())){
             announcementRepository.delete(announcement);
         }
-        return "redirect:";
+        return "redirect:myannouncements";
     }
+
+
+    @PatchMapping("/{announcementId}")
+    public String editAnnouncement(@AuthenticationPrincipal User user,
+                                   @PathVariable("announcementId") Announcement announcement,
+                                   @ModelAttribute("announcement") @Valid Announcement newAnnouncement,
+                                   BindingResult bindingResult){
+
+        if(user.equals(announcement.getAuthor())){
+            if(bindingResult.hasErrors()){
+                return "addAnnouncement";
+            }
+
+            announcement.setTopic(newAnnouncement.getTopic());
+            announcement.setText(newAnnouncement.getText());
+            announcement.setTag(newAnnouncement.getTag());
+
+            announcementRepository.save(announcement);
+        }
+
+        return "redirect:myannouncements";
+    }
+    @GetMapping("/{announcementId}/edit")
+    public String editAnnouncementPage(
+                                   @PathVariable("announcementId") Announcement announcement,
+                                   Model model){
+        model.addAttribute("announcement", announcement);
+        return "editAnnouncement";
+    }
+
+
 }
