@@ -20,7 +20,7 @@ public class UserService implements UserDetailsService {
 
     public boolean addUser(User user){
         User userFromDb = userRepository.findByName(user.getEmail());
-        if(userFromDb == null){
+        if(userFromDb != null){
             return false;
         }
         user.setActive(true);
