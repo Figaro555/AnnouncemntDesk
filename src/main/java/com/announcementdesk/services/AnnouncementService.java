@@ -51,6 +51,7 @@ public class AnnouncementService {
              announcement.setFilename(resultFileName);
          }
          announcement.setAuthor(author);
+         
          announcementRepository.save(announcement);
 
     }
