@@ -1,10 +1,7 @@
 package com.announcementdesk.controlers;
 
-import com.announcementdesk.domain.Role;
 import com.announcementdesk.domain.User;
-import com.announcementdesk.repositories.UserRepository;
 import com.announcementdesk.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

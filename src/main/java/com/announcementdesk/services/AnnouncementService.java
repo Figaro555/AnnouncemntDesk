@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -16,14 +17,18 @@ import java.util.UUID;
 @Service
 public class AnnouncementService {
 
-    @Value("${upload.path}")
-    private String uploadPath;
 
     private final AnnouncementRepository announcementRepository;
+    private final FileManager fileManager;
 
-    public AnnouncementService(AnnouncementRepository announcementRepository){
+
+
+    public AnnouncementService(AnnouncementRepository announcementRepository, FileManager fileManager){
         this.announcementRepository = announcementRepository;
+        this.fileManager = fileManager;
     }
+
+
 
     public Iterable<Announcement> findAll(){
         Iterable<Announcement> announcements = announcementRepository.findAll();
@@ -40,19 +45,11 @@ public class AnnouncementService {
     }
 
      public void addAnnouncement(Announcement announcement, User author, MultipartFile file) throws IOException {
-         if(file!= null && file.getOriginalFilename().length()!=0){
-             File uploadDir  = new File(uploadPath);
-             if(!uploadDir.exists())
-                 uploadDir.mkdir();
 
-             String fileUUID = UUID.randomUUID().toString();
-             String resultFileName = fileUUID + "_" + file.getOriginalFilename();
-             file.transferTo(new File(uploadPath + "/" + resultFileName));
-             announcement.setFilename(resultFileName);
-         }
-         announcement.setAuthor(author);
+        fileManager.addFile(announcement, file);
+        announcement.setAuthor(author);
          
-         announcementRepository.save(announcement);
+        announcementRepository.save(announcement);
 
     }
 

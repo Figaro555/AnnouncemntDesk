@@ -3,7 +3,6 @@ package com.announcementdesk.controlers;
 import com.announcementdesk.domain.Announcement;
 import com.announcementdesk.domain.User;
 import com.announcementdesk.services.AnnouncementService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,13 +26,9 @@ public class AnnouncementController {
     }
 
 
-    @Value("${upload.path}")
-    private String uploadPath;
-
-
     @GetMapping
     public String main(@RequestParam(value = "filter", defaultValue = "") String filter,
-                       Model model){
+                       Model model) {
 
         Iterable<Announcement> announcements = announcementService.findByFilter(filter);
         model.addAttribute("announcements", announcements);
@@ -42,7 +37,7 @@ public class AnnouncementController {
 
 
     @GetMapping("/add")
-    public String addAnnouncement(Model model){
+    public String addAnnouncement(Model model) {
         model.addAttribute("announcement", new Announcement());
         return "addAnnouncement";
     }
@@ -54,20 +49,17 @@ public class AnnouncementController {
             @ModelAttribute("announcement") @Valid Announcement announcement,
             BindingResult bindingResult,
             @RequestParam("file") MultipartFile file) throws IOException {
-
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "addAnnouncement";
         }
-
         announcementService.addAnnouncement(announcement, user, file);
-
 
         return "redirect:";
     }
 
 
     @GetMapping("/myannouncements")
-    public String getMyAnnouncements(@AuthenticationPrincipal User user, Model model){
+    public String getMyAnnouncements(@AuthenticationPrincipal User user, Model model) {
         List<Announcement> userAnnouncements = announcementService.findByAuthor(user);
         model.addAttribute("announcements", userAnnouncements);
         return "myAnnouncements";
@@ -75,9 +67,9 @@ public class AnnouncementController {
 
     @DeleteMapping("/{announcementId}")
     public String deleteAnnouncement(@AuthenticationPrincipal User user,
-                                      @PathVariable("announcementId") Announcement announcement){
+                                     @PathVariable("announcementId") Announcement announcement) {
 
-        if(user.equals(announcement.getAuthor())){
+        if (user.equals(announcement.getAuthor())) {
             announcementService.delete(announcement);
         }
         return "redirect:myannouncements";
@@ -88,10 +80,10 @@ public class AnnouncementController {
     public String editAnnouncement(@AuthenticationPrincipal User user,
                                    @PathVariable("announcementId") Announcement announcement,
                                    @ModelAttribute("announcement") @Valid Announcement newAnnouncement,
-                                   BindingResult bindingResult){
+                                   BindingResult bindingResult) {
 
-        if(user.equals(announcement.getAuthor())){
-            if(bindingResult.hasErrors()){
+        if (user.equals(announcement.getAuthor())) {
+            if (bindingResult.hasErrors()) {
                 return "addAnnouncement";
             }
 
@@ -104,10 +96,11 @@ public class AnnouncementController {
 
         return "redirect:myannouncements";
     }
+
     @GetMapping("/{announcementId}/edit")
     public String editAnnouncementPage(
-                                   @PathVariable("announcementId") Announcement announcement,
-                                   Model model){
+            @PathVariable("announcementId") Announcement announcement,
+            Model model) {
         model.addAttribute("announcement", announcement);
         return "editAnnouncement";
     }
