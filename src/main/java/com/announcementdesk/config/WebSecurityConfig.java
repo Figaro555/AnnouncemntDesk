@@ -16,7 +16,6 @@ import javax.sql.DataSource;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
-    private DataSource dataSource;
     private UserService userService;
 
     public WebSecurityConfig(UserService userService){
@@ -26,6 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
                     .antMatchers("/","/auth/registration")
                     .permitAll()
@@ -36,7 +36,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                 .and()
                     .logout()
-                    .permitAll();
+                    .permitAll()
+                //.and()
+                //.addFilterBefore()
+        ;
 
     }
 
@@ -44,8 +47,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService)
         .passwordEncoder(NoOpPasswordEncoder.getInstance());
-
-
     }
 
 
