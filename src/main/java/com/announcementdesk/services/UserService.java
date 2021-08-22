@@ -19,7 +19,7 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean addUser(User user){
-        User userFromDb = userRepository.findByName(user.getEmail());
+        User userFromDb = userRepository.findByEmail(user.getEmail());
         if(userFromDb != null){
             return false;
         }
@@ -28,6 +28,10 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
 
         return true;
+    }
+
+    public User findByName(String name){
+        return userRepository.findByName(name);
     }
 
 

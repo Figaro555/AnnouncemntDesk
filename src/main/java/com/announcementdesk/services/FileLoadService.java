@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Service
-public class FileManager {
+public class FileLoadService {
 
     @Value("${upload.path}")
     private String uploadPath;

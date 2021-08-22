@@ -1,14 +1,13 @@
 package com.announcementdesk.controlers;
 
 import com.announcementdesk.domain.User;
+import com.announcementdesk.filters.jwt.JwtManager;
 import com.announcementdesk.services.UserService;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -18,11 +17,29 @@ import javax.validation.Valid;
 @RequestMapping("/auth")
 public class AuthController {
 
-
     private UserService userService;
+    private JwtManager jwtManager;
 
-    public AuthController(UserService userService){
+    public AuthController(UserService userService, JwtManager jwtManager){
+
         this.userService = userService;
+        this.jwtManager = jwtManager;
+    }
+
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String enterSystem( @RequestParam("username") String name,
+                                @RequestParam("password") String password){
+        User userFromDB = userService.findByName(name);
+        if(userFromDB != null && userFromDB.getPassword().equals(password) ){
+            String token = jwtManager.generateToken(name);
+            return token;
+        }
+        return "login";
     }
 
 

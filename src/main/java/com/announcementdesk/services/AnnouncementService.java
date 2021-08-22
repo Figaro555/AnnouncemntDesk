@@ -19,11 +19,11 @@ public class AnnouncementService {
 
 
     private final AnnouncementRepository announcementRepository;
-    private final FileManager fileManager;
+    private final FileLoadService fileManager;
 
 
 
-    public AnnouncementService(AnnouncementRepository announcementRepository, FileManager fileManager){
+    public AnnouncementService(AnnouncementRepository announcementRepository, FileLoadService fileManager){
         this.announcementRepository = announcementRepository;
         this.fileManager = fileManager;
     }
