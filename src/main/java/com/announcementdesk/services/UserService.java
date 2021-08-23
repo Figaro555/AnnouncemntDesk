@@ -14,15 +14,15 @@ import java.util.Collections;
 @Service
 @Transactional
 public class UserService implements UserDetailsService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public boolean addUser(User user){
+    public boolean addUser(User user) {
         User userFromDb = userRepository.findByEmail(user.getEmail());
-        if(userFromDb != null){
+        if (userFromDb != null) {
             return false;
         }
         user.setActive(true);
@@ -32,7 +32,7 @@ public class UserService implements UserDetailsService {
         return true;
     }
 
-    public User findByName(String name){
+    public User findByName(String name) {
         return userRepository.findByName(name);
     }
 
@@ -40,7 +40,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByName(username);
-        if(user == null) {
+        if (user == null) {
             System.out.println("Misha vse huynya");
             System.out.println(username);
             throw new UsernameNotFoundException("User ne nayden");

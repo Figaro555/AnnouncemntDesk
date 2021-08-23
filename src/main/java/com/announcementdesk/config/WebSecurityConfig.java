@@ -12,17 +12,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.sql.DataSource;
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
-    private UserService userService;
-    private JwtFilter jwtFilter;
+    private final UserService userService;
+    private final JwtFilter jwtFilter;
 
-    public WebSecurityConfig(UserService userService, JwtFilter jwtFilter){
+    public WebSecurityConfig(UserService userService, JwtFilter jwtFilter) {
 
         this.userService = userService;
         this.jwtFilter = jwtFilter;
@@ -35,11 +33,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/","/auth/registration", "/auth/login")
-                    .permitAll()
+                .antMatchers("/", "/auth/registration", "/auth/login")
+                .permitAll()
                 .and()
-                    .logout()
-                    .permitAll()
+                .logout()
+                .permitAll()
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -48,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService)
-        .passwordEncoder(NoOpPasswordEncoder.getInstance());
+                .passwordEncoder(NoOpPasswordEncoder.getInstance());
     }
 
 

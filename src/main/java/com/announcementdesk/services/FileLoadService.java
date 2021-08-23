@@ -17,9 +17,9 @@ public class FileLoadService {
     private String uploadPath;
 
     public boolean addFile(Announcement announcement, MultipartFile file) throws IOException {
-        if(file!= null && file.getOriginalFilename().length()!=0){
-            File uploadDir  = new File(uploadPath);
-            if(!uploadDir.exists())
+        if (file != null && file.getOriginalFilename().length() != 0) {
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists())
                 uploadDir.mkdir();
 
             String fileUUID = UUID.randomUUID().toString();

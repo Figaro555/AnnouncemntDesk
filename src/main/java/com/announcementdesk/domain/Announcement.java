@@ -32,7 +32,7 @@ public class Announcement {
     @JoinColumn(name = "user_id")
     private User author;
 
-    public Announcement(){
+    public Announcement() {
 
     }
 
@@ -43,7 +43,7 @@ public class Announcement {
         this.author = author;
     }
 
-    public String getAuthorName(){
+    public String getAuthorName() {
         return author.getName();
     }
 

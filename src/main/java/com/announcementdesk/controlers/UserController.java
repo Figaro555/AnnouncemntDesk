@@ -1,4 +1,4 @@
- package com.announcementdesk.controlers;
+package com.announcementdesk.controlers;
 
 import com.announcementdesk.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class UserController {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository){
+    public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @GetMapping("/")
-    public String main(Model model){
+    public String main(Model model) {
         return "home";
     }
 }

@@ -4,7 +4,6 @@ import com.announcementdesk.domain.User;
 import com.announcementdesk.services.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -21,10 +20,10 @@ import static org.springframework.util.StringUtils.hasText;
 public class JwtFilter extends GenericFilterBean {
 
     private final String AUTHORIZATION = "Authorization";
-    private UserService userService;
-    private JwtManager jwtManager;
+    private final UserService userService;
+    private final JwtManager jwtManager;
 
-    public JwtFilter(UserService userService, JwtManager jwtManager){
+    public JwtFilter(UserService userService, JwtManager jwtManager) {
         this.userService = userService;
         this.jwtManager = jwtManager;
     }
