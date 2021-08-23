@@ -31,6 +31,7 @@ public class JwtFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        System.out.println("JWT Processing");
         String token = getTokenFromRequest((HttpServletRequest) servletRequest);
         if (token != null && jwtManager.validateToken(token)) {
             String username = jwtManager.getNameFromToken(token);

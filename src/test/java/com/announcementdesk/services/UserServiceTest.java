@@ -51,6 +51,15 @@ class UserServiceTest {
 
     }
 
+    @Test
+    void successFindingUser(){
+        User u = new User("sergio","aaaa@gmail.com","aaaaaaa");
+        userRepository.save(u);
+        Iterable<User> u1 = userRepository.findAll();
+        System.out.println(u1);
+        //Assert.assertEquals(u.getUsername(),u1.getUsername());
+        //Assert.assertEquals(u.getPassword(), u1.getPassword());
 
+    }
 
 }

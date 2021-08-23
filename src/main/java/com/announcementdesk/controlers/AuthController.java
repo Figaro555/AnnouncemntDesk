@@ -3,7 +3,6 @@ package com.announcementdesk.controlers;
 import com.announcementdesk.domain.User;
 import com.announcementdesk.filters.jwt.JwtManager;
 import com.announcementdesk.services.UserService;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,6 +34,8 @@ public class AuthController {
     public String enterSystem( @RequestParam("username") String name,
                                 @RequestParam("password") String password){
         User userFromDB = userService.findByName(name);
+        System.out.println(userFromDB);
+
         if(userFromDB != null && userFromDB.getPassword().equals(password) ){
             String token = jwtManager.generateToken(name);
             return token;

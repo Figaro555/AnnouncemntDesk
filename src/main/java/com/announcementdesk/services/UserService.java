@@ -8,9 +8,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Collections;
 
 @Service
+@Transactional
 public class UserService implements UserDetailsService {
     private UserRepository userRepository;
 
@@ -37,6 +39,12 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByName(username);
+        User user = userRepository.findByName(username);
+        if(user == null) {
+            System.out.println("Misha vse huynya");
+            System.out.println(username);
+            throw new UsernameNotFoundException("User ne nayden");
+        }
+        return user;
     }
 }
