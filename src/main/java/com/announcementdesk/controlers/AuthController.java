@@ -30,13 +30,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String enterSystem(@RequestParam("username") String name,
-                              @RequestParam("password") String password) {
-        User userFromDB = userService.findByName(name);
+    public String enterSystem(@RequestBody AuthRequestDTO authRequestDTO) {
+        User userFromDB = userService.findByName(authRequestDTO.getUsername());
         System.out.println(userFromDB);
 
-        if (userFromDB != null && userFromDB.getPassword().equals(password)) {
-            String token = jwtManager.generateToken(name);
+        if (userFromDB != null && userFromDB.getPassword().equals(authRequestDTO.getPassword())) {
+            String token = jwtManager.generateToken(authRequestDTO.getUsername());
             return token;
         }
         return "login";
