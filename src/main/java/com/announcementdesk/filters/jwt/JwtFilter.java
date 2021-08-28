@@ -2,6 +2,8 @@ package com.announcementdesk.filters.jwt;
 
 import com.announcementdesk.domain.User;
 import com.announcementdesk.services.UserService;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Level;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,7 @@ import java.io.IOException;
 import static org.springframework.util.StringUtils.hasText;
 
 @Component
+@Log4j2
 public class JwtFilter extends GenericFilterBean {
 
     private final String AUTHORIZATION = "Authorization";
@@ -30,7 +33,7 @@ public class JwtFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        System.out.println("JWT Processing");
+        log.log(Level.INFO, "JWT Processing");
         String token = getTokenFromRequest((HttpServletRequest) servletRequest);
         if (token != null && jwtManager.validateToken(token)) {
             String username = jwtManager.getNameFromToken(token);

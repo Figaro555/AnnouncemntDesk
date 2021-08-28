@@ -1,6 +1,8 @@
 package com.announcementdesk.filters.jwt;
 
 import io.jsonwebtoken.*;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -9,12 +11,14 @@ import java.time.ZoneId;
 import java.util.Date;
 
 @Component
+@Log4j2
 public class JwtManager {
 
     @Value("$(jwt.secret)")
     private String secretKey;
 
     public String generateToken(String name) {
+        log.log(Level.INFO, "Generating JWT");
         Date expirationDate = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
         return Jwts.builder()
                 .setSubject(name)
@@ -28,15 +32,15 @@ public class JwtManager {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
         } catch (SignatureException e) {
-            System.out.println("Invalid JWT signature.");
+            log.log(Level.WARN, "Invalid JWT signature.");
         } catch (MalformedJwtException e) {
-            System.out.println("Invalid JWT token.");
+            log.log(Level.WARN, "Invalid JWT token.");
         } catch (ExpiredJwtException e) {
-            System.out.println("Expired JWT token.");
+            log.log(Level.WARN, "Expired JWT token.");
         } catch (UnsupportedJwtException e) {
-            System.out.println("Unsupported JWT token.");
+            log.log(Level.WARN, "Unsupported JWT token.");
         } catch (IllegalArgumentException e) {
-            System.out.println("JWT token compact of handler are invalid.");
+            log.log(Level.WARN, "JWT token compact of handler are invalid.");
         }
         return false;
     }

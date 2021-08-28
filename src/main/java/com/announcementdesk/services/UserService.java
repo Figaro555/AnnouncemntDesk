@@ -3,6 +3,8 @@ package com.announcementdesk.services;
 import com.announcementdesk.domain.Role;
 import com.announcementdesk.domain.User;
 import com.announcementdesk.repositories.UserRepository;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Level;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,6 +15,7 @@ import java.util.Collections;
 
 @Service
 @Transactional
+@Log4j2
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
@@ -28,7 +31,7 @@ public class UserService implements UserDetailsService {
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
         userRepository.save(user);
-
+        log.log(Level.INFO, "Added new user");
         return true;
     }
 
@@ -41,7 +44,8 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByName(username);
         if (user == null) {
-            throw new UsernameNotFoundException("User ne nayden");
+            log.log(Level.WARN, "User wasn't found");
+            throw new UsernameNotFoundException("User wasn't found");
         }
         return user;
     }
